@@ -198,3 +198,69 @@ path.resolve('wwwroot', 'static_files/png/' ,'../gif/image.gif');
 
 ```
 [Node Path 공식 문서](https://nodejs.org/api/path.html)
+
+# webpack Entry
+* 자바스크립트 이외의 파일 형태의 웹 자원을 js로 변환하여 로딩(img, css, ...)
+```
+module.exports = {
+  entry: "./app/index.js",
+  output: {
+    filename: "bundle.js",
+    path: path.resolve(__dirname, "dist")
+  },
+  module: {
+    rules: [
+      //모든 css 파일에 style-loader, css-loader 사용 명시
+      { test: /\.css$\, use: ['style-loader', 'css-loader'] }
+    ]
+  }
+};
+
+```
+```
+{
+  test: /backbone/,
+  use: [
+    'expose-loader?Backbone',
+    'imports-loader?_=underscore,jquery'
+    //(1)jquery, (2) underscore 로딩
+   ]
+}
+```
+* [expose-loader 관련](https://www.npmjs.com/package/expose-loader)
+* [imports-loader 관련](https://github.com/webpack-contrib/imports-loader)
+* [webpack loaders 문서](https://webpack.js.org/concepts/loaders/)
+>##### Babel Loader ES6
+* preset: Babel 플러그인 리스트
+* ES6 지원되지 않는 문법 트랜스 파일링
+```
+module: {
+  rules: [{
+    test: /\.js$/,
+    use: [{
+      loader: 'babel-loader',
+      options: {
+        presets: [
+          ['es2015', 'react', {modules: false}]//Tree Shaking: 사용되지 않는 모듈 미포함
+        ]
+      }
+    }]
+  }]
+}
+```
+[Babel 공식](https://babeljs.io/)
+
+>##### Plugin 
+* 플러그인은 파일별 커스텀 기능을 사용하기 위해서 사용
+* JS minification, file extraction, alias
+```
+modules.export = {
+  entry: {},
+  output: {},
+  module: {},
+  plugins: [
+    new webpack.optimize.UglifyJsPlugin()
+  ]
+}
+```
+* [webpack plugins](https://webpack.js.org/plugins/)
