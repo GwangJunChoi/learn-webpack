@@ -5,6 +5,8 @@ npm install webpack --save-dev
 npm install moment lodash --save
 npm i webpack-manifest-plugin --save-dev
 ```
+[Moment.js 공식](https://momentjs.com/)
+[Lodash.js 공식](https://lodash.com/)
 >#### package.json 생성
 ```
 npm init -y
@@ -49,3 +51,4 @@ new ManifestPlugin({
   basePath: './dist/'
 })
 ```
+

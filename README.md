@@ -177,6 +177,18 @@ output : {
   filename: '[chunkhas].js'
 }
 ```
+```
+output : {
+  path: '/home/project/public/assets',
+  publicPath: '/assets/'
+}
+```
+```
+output : {
+  path: '/home/project/cdn/assets/[hash]',
+  publicPath: 'http://cdn.ex.com/assets/[hash]'
+}
+```
 >##### path.join() & path.resolve()
 
 ```
@@ -250,7 +262,7 @@ module: {
 ```
 [Babel 공식](https://babeljs.io/)
 
->##### Plugin 
+# Plugin
 * 플러그인은 파일별 커스텀 기능을 사용하기 위해서 사용
 * JS minification, file extraction, alias
 ```
@@ -264,3 +276,100 @@ modules.export = {
 }
 ```
 * [webpack plugins](https://webpack.js.org/plugins/)
+
+# webpack Resolve
+* Webpack 의 모듈 번들링 관점에서 봤을 때, 모듈 간의 의존성을 고려하여 모듈을 로딩해야함
+* 모듈을 어떤 위치에서 어떻게 로딩할지에 관해 정의를 하는 것이 바로  Module Resolution
+```
+//일만적인 모듈 로딩 방식
+import foo from 'path/to/module'
+//or
+require('path/to/module');
+```
+>##### Resolve alias
+* config 파일에 resolve를 추가하여 모듈 로딩에 관련된 옵션 사용
+```
+alias: {
+  Utilities: path.resolve(_dirname, 'src/path/utilities/')
+}
+import Utility from '../../src/path/utilities/utility';
+//use alias
+import Utility from 'Utilities/utility';
+```
+>##### Resolve modules
+* require() import '' 등의 모듈 로딩시에 어느 폴더를 기준할 것 인지 정하는 옵션
+```
+modules: ["node_modules"]//default
+modules: [path.resolve(_dirname, 'src'), 'node_mudules']//src/node_modules
+```
+# webpack 빌드를 위한 개발 서버 구성
+* webpack-dev-server : webpack자체에서 제공하는 개발 서버이고 빠른 리로딩 기능제공
+* webpack-dev-middleware : 서버가 이미 구성된 경우에는 webpack을 미들웨어로 구성하여 서버와 연결
+
+>##### webpack dev server
+* 페이지 자동고침을 제공하는 webpack 개발용 node.js 서버
+
+>##### webpack dev server 설치
+```
+npm install --save-dev webpack-dev-server
+```
+
+>##### webpack dev server 실행
+```
+webpack-dev-server --open
+```
+```
+//package.json 아래 명령어 등록 간편실행
+"script" : { "start": "webpack-dev-server" }
+```
+[DevServer 추가옵션](https://webpack.js.org/configuration/dev-server/)
+
+>##### dev server option
+* publicPath : webpack으로 번들한 파일들이 위치하는곳 default /
+```
+// 항상 `/` 를 앞뒤에 붙여야 한다.
+publicPath: "/assets/"
+```
+* contentBase: 서버가 로딩할 static 파일 경로를 지정 default work directory
+```
+//절대 경로 사용
+contentBase: path.join(_dirname, "public")
+//비활성화
+contentBase: false
+```
+* compress: gzip 앞축 방식을 이용하여 웹 자원의 사이즈를 줄인다.
+```
+compress: true
+```
+>##### webpack-dev-middleware
+* 기존 구성 서버에 webpack에서 컴파일한 파일을 전달하는 middleware wrapper
+* webpack 에 설정한 파일을 변경시, 파일에 직접 변경 내역을 저장하지 않고 메모리 공간을 활용
+* 변경된 파일 내역을 파일 디렉토리 구조안에서는 확인 불가능
+
+>##### webpack-dev-middleware 설치
+* express nodejs 프레임워크
+```
+npm install --save-dev express webpack-dev-middleware
+```
+* 설치 후 webpac & webpack dev middle ware 등 로딩
+```
+var express = require('express');
+var webpack = require('webpack');
+var webpackDevMiddleware = require('webpack-dev-middleware');
+var webpackConfig = require('./webpac.config');
+```
+* webpackDevMiddleware 에 config 세팅 적용 및 번들링 파일 경로 지정
+```
+var app = express();
+var compiler = webpack(webpackConfig);
+
+app.user(webpackDevMiddleware(compiler, {
+  publicPath: webpackConfig.output.publicPath, //일반적으로 ouput 에 설정한 publicPath
+  stats: { colors: true }// 번들링 시 webpack 로그 컬러 하이라이팅
+  //lazy: true, //entry point 에 네트워크 요청이 있을 때만 컴파일을 다시한다.
+}));
+
+app.listen(3000, function () {
+  console.log('Listening on port 3000!');
+});
+```

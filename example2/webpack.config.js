@@ -1,4 +1,5 @@
 var webpack = require("webpack");
+var ManifestPlugin = require('webpack-manifest-plugin');
 var path = require("path");
 
 module.exports = {
@@ -21,4 +22,10 @@ module.exports = {
       }
     }
   },
+  plugins: [
+    new ManifestPlugin({
+      fileName: 'manifest.json',
+      basePath: './dist/'
+    })
+  ]
 };
