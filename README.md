@@ -373,3 +373,61 @@ app.listen(3000, function () {
   console.log('Listening on port 3000!');
 });
 ```
+# webpack 기타
+>##### webpack 명령어
+* webpack: 웹팩 빌드 기본 명령어 (개발용)
+* webpack -p: minification 기능이 들어간 빌드(배포용)
+* webpack -watch(-w): 개발에서 빌드할 파일의 변화를 감지
+* webpack -d: sourcemap 포함하여 빌드
+* webpack --display-error-detials: error 발생시 디버깅 정보를 상세히 출력
+* webpack --optimize-minimize --define process.env.NODE_ENV="'production'": 배포용
+
+>##### watch 옵션
+* webpack 설정에 해당되는 파일의 변경이 일어나면 자동으로 번들링 재진행
+```
+webppack --progress --watch
+```
+>##### sourcemap
+* source-map 설정을 추가하여 원래의 파일구조에서 디버깅 가능
+```
+module.export = {
+  devtool: '#inline-source-map'
+}
+```
+>##### Gulp - web 자동화 도구
+* Gulp 와 Webpack 모두 Node.js 기반이기 때문에 통합해서 사용
+```
+var gulp = require('gulp');
+var webpack = require('webpack-stream');
+var webpackConfig = require('./webpack.config.js');
+
+gulp.task('default', fujnction () {
+  return gulp.src('src/entry.js')
+    .pipe(webpack(webpackConfig))
+    .pipe(gulp.dest('dist/'));
+});
+
+```
+[Gulp 공식 사이트](https://gulpjs.com/)
+>##### Hot Mulde Replacement
+* 웹 앱에서 사용하는 JS 모듈들으 갱신할 때, 화면의새로고침 없이 뒷 단에서 변경 및 삭제 기능을 지원
+* 공식 가이드에는 React 를 기준으로 사용법이 작성
+[Hot Module Replacement 참고 링크](https://webpack.js.org/concepts/hot-module-replacement/)
+
+# webpack 자료
+* Webpack2 Doc https://webpack.js.org/
+* Webpack1 Doc http://webpack.github.io/docs/
+* webpack-howto https://github.com/petehunt/webpack-howto
+* webpack-howto2 https://gist.github.com/xjamundx/b1c800e9282e16a6a18e
+* webpack beginners guide, Site Point https://www.sitepoint.com/beginners-guide-to-webpack-2-and-module-bundling/?utm_source=frontendfocus&utm_medium=email
+* requireJS-to-webpackConfig https://www.npmjs.com/package/requirejs-to-webpack-cli
+* migration from requirejs to webpack https://medium.com/@ArtyomTrityak/migration-from-require-js-to-webpack-2-a733a4366ab5
+* webpack-shimming https://webpack.js.org/guides/shimming/
+* Critical-Dependencies http://webpack.github.io/docs/context.html#critical-dependencies
+* Gulp Webpack plugin https://www.npmjs.com/package/gulp-webpack
+* Webpack Dev Server StackOverFlow https://stackoverflow.com/questions/42712054/content-not-from-webpack-is-served-from-foo
+* Webpack Dev Middleware in Express http://madole.github.io/blog/2015/08/26/setting-up-webpack-dev-middleware-in-your-express-application/
+* Webpack Confusing Part https://medium.com/@rajaraodv/webpack-the-confusing-parts-58712f8fcad9
+* Regular Expression, MDN https://developer.mozilla.org/ko/docs/Web/JavaScript/Guide/%EC%A0%95%EA%B7%9C%EC%8B%9D
+* Regular Expression Test http://regexr.com/
+* Webpack First Principle, Video https://www.youtube.com/watch?v=WQue1AN93YU  
