@@ -57,7 +57,7 @@ webpack.config.js  설정한 내용을 기반으로 번들파일 생성
 * Gulp, Webpack 모두 node기반, NPM을 사용하여 필요 라이브러리 로딩
 * 재사용 가능한 code를 module, package라고 호칭
 * package.json 해당 package 에 대한 파일 정보가 들어있음
-* keword로 패키지 검색 가능
+* keyword로 패키지 검색 가능
 * [npm공식 사이트](https://www.npmjs.com/)
 
 >##### 명령어 모음
